@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070914">
+  <title>CYBERWORDS — Crossword Challenge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">N_</div><div><div class="brand-name glitch" data-text="NEUROGRID">NEUROGRID</div><div class="brand-sub">CYBERWORDS · CROSSWORD CHALLENGE</div></div></div>
+      <div class="online"><i></i>SYSTEM ONLINE</div>
+    </header>
+    <section class="intro">
+      <div><div class="eyebrow">ARQUIVO 01 / ARQUITETURA COMPUTACIONAL</div><h1 class="pixel" style="font-size:clamp(21px,4vw,42px);line-height:1.25;margin:0;color:#fff;text-shadow:2px 2px 0 #56248a,0 0 14px #9d4edd70">CYBERWORDS</h1><p>Decifre os conceitos, conecte as palavras e complete o circuito. Leia cada pista e preencha as casas do tabuleiro.</p></div>
+      <div class="round-tag">NÍVEL 01&nbsp; / &nbsp;12 ENTRADAS</div>
+    </section>
+    <section class="statusbar" aria-label="Progresso do desafio">
+      <div><div class="score-label">Palavras corretas</div><div class="score-value"><em id="score">0</em> de 12 palavras</div></div>
+      <div class="progress-wrap"><div class="score-label">Progresso do sistema</div><div class="progress-track"><div class="progress-fill" id="progress"></div></div></div>
+      <div class="metric"><div class="score-label">Precisão</div><strong id="accuracy">0%</strong></div>
+      <div class="metric"><div class="score-label">Status</div><strong id="status">EM CURSO</strong></div>
+      <div class="actions"><button class="btn" id="checkBtn" type="button">▣&nbsp; CONFERIR</button><button class="btn secondary" id="resetBtn" type="button">↻&nbsp; REINICIAR</button></div>
+    </section>
+    <main class="main-layout">
+      <section class="panel" aria-label="Tabuleiro de palavras cruzadas">
+        <div class="panel-head"><div class="panel-title">▦&nbsp; GRADE DE DADOS</div><div class="panel-code">26 × 18 // INPUT READY</div></div>
+        <div class="board-scroll"><div class="board" id="board" role="group" aria-label="Tabuleiro interativo"></div></div>
+        <div class="legend"><span><i></i> CASA ATIVA</span><span>⌨ USE AS SETAS PARA NAVEGAR</span></div>
+      </section>
+      <aside class="panel clue-panel" aria-label="Pistas">
+        <section class="clue-group"><div class="clue-heading"><b>→</b> HORIZONTAIS</div><ol class="clues" id="acrossClues"></ol></section>
+        <section class="clue-group"><div class="clue-heading vertical"><b>↓</b> VERTICAIS</div><ol class="clues" id="downClues"></ol></section>
+      </aside>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite">Selecione uma pista ou casa para começar.</div>
+    <div class="help">DIGITE DIRETAMENTE NO TABULEIRO · BACKSPACE VOLTA · ENTER ALTERNA A DIREÇÃO</div>
+  </div>
+  <div class="modal-backdrop" id="victory" role="dialog" aria-modal="true" aria-labelledby="victoryTitle"><div class="modal"><h2 id="victoryTitle">DESAFIO COMPLETO!</h2><p>Todos os conceitos foram conectados. Sua rede de conhecimento está online.</p><button class="btn" id="closeVictory" type="button">CONTINUAR</button></div></div>
+
+</body>
+</html>
