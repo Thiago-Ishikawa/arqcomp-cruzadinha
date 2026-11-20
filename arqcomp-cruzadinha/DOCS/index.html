@@ -39,6 +39,47 @@
     <div class="help">DIGITE DIRETAMENTE NO TABULEIRO · BACKSPACE VOLTA · ENTER ALTERNA A DIREÇÃO</div>
   </div>
   <div class="modal-backdrop" id="victory" role="dialog" aria-modal="true" aria-labelledby="victoryTitle"><div class="modal"><h2 id="victoryTitle">DESAFIO COMPLETO!</h2><p>Todos os conceitos foram conectados. Sua rede de conhecimento está online.</p><button class="btn" id="closeVictory" type="button">CONTINUAR</button></div></div>
-
 </body>
+<script>
+  (()=>{
+    'use strict';
+    const entries=[
+      {word:'MICROCONTROLADOR',dir:'across',r:7,c:2,clue:'Circuito integrado com núcleo de processamento, memória e periféricos para controle de sistemas.'},
+      {word:'MEMORIADEMASSA',dir:'down',r:3,c:11,clue:'Meio persistente, como um disco, destinado a guardar grandes volumes de dados.'},
+      {word:'ADDRESSBUS',dir:'down',r:4,c:17,clue:'Conjunto de linhas que indica a localização de dados ou instruções no sistema.'},
+      {word:'EEPROM',dir:'across',r:4,c:10,clue:'Tecnologia regravável eletricamente, em blocos pequenos, que mantém dados sem alimentação.'},
+      {word:'DATABUS',dir:'down',r:6,c:14,clue:'Conjunto de linhas que transporta valores entre processador, memória e periféricos.'},
+      {word:'DUALCORE',dir:'across',r:5,c:17,clue:'Processador com dois núcleos de execução independentes no mesmo chip.'},
+      {word:'QUADCORE',dir:'down',r:2,c:8,clue:'Processador com quatro núcleos de execução independentes no mesmo chip.'},
+      {word:'FLASH',dir:'down',r:4,c:20,clue:'Tipo não volátil apagado eletricamente em setores e usado em cartões.'},
+      {word:'CACHE',dir:'down',r:1,c:24,clue:'Área pequena e veloz que mantém cópias de dados usados frequentemente pelo processador.'},
+      {word:'ROM',dir:'down',r:7,c:5,clue:'Memória não volátil usada para guardar instruções que persistem sem energia.'},
+      {word:'RAM',dir:'across',r:16,c:10,clue:'Armazenamento volátil de acesso rápido usado temporariamente durante a execução.'},
+      {word:'DMA',dir:'down',r:3,c:15,clue:'Mecanismo que transfere dados entre periféricos e memória sem intervenção contínua do processador.'}
+    ];
+    const boardEl=document.getElementById('board'),acrossEl=document.getElementById('acrossClues'),downEl=document.getElementById('downClues');
+    const cells=new Map(),numbers=new Map();let selected=entries[0],focusAt=null,checked=false,won=false;
+    const key=(r,c)=>`${r},${c}`;
+    // Derive crossword numbering from top-to-bottom, left-to-right start cells.
+    [...entries].sort((a,b)=>a.r-b.r||a.c-b.c).forEach((e,i)=>{numbers.set(key(e.r,e.c),i+1);e.number=i+1});
+    entries.forEach(e=>{e.cells=[];for(let i=0;i<e.word.length;i++){const r=e.r+(e.dir==='down'?i:0),c=e.c+(e.dir==='across'?i:0),cellKey=key(r,c);let model=cells.get(cellKey);if(!model){model={r,c,answer:'',entries:[]};cells.set(cellKey,model)}if(model.answer&&model.answer!==e.word[i])throw new Error(`Cruzamento inválido em ${cellKey}`);model.answer=e.word[i];model.entries.push(e);e.cells.push(cellKey)}});
+    // The assigned positions form a single connected crossword; each entry must intersect another.
+    for(const e of entries){if(!e.cells.some(k=>cells.get(k).entries.length>1))throw new Error(`Palavra sem cruzamento: ${e.word}`)}
+    function renderBoard(){for(let r=0;r<18;r++)for(let c=0;c<26;c++){const m=cells.get(key(r,c));if(!m)continue;const wrap=document.createElement('div');wrap.className='cell-wrap';const input=document.createElement('input');input.className='cell'+(numbers.has(key(r,c))?' has-num':'');input.type='text';input.maxLength=1;input.autocomplete='off';input.autocapitalize='characters';input.spellcheck=false;input.dataset.key=key(r,c);input.setAttribute('aria-label',`Linha ${r+1}, coluna ${c+1}`);if(numbers.has(key(r,c))){const n=document.createElement('span');n.className='num';n.textContent=numbers.get(key(r,c));wrap.append(n)}input.addEventListener('focus',()=>onFocus(m));input.addEventListener('click',()=>onCellClick(m));input.addEventListener('input',()=>onInput(input,m));input.addEventListener('keydown',ev=>onKey(ev,m));wrap.append(input);boardEl.append(wrap);m.el=input}}
+    function renderClues(dir,target){const group=entries.filter(e=>e.dir===dir);for(const e of group){const li=document.createElement('li');li.className=`clue ${dir}`;li.tabIndex=0;li.dataset.word=e.word;li.innerHTML=`<span class="clue-number">${e.number}</span><span>${e.clue}<small class="hintword" aria-hidden="true">${e.word.length} LETRAS</small></span>`;li.addEventListener('click',()=>selectEntry(e,true));li.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();selectEntry(e,true)}});target.append(li);e.clueEl=li}}
+    function selectEntry(e,focus){selected=e;focusAt=e.cells[0];entries.forEach(x=>x.clueEl?.classList.toggle('selected',x===e));paint();if(focus)cells.get(focusAt).el.focus()}
+    function onFocus(m){focusAt=key(m.r,m.c);if(!m.entries.includes(selected))selected=m.entries[0];entries.forEach(x=>x.clueEl?.classList.toggle('selected',x===selected));paint()}
+    function onCellClick(m){if(m.entries.length>1&&m.entries.includes(selected)){selected=m.entries.find(e=>e!==selected)}else selected=m.entries[0];focusAt=key(m.r,m.c);entries.forEach(x=>x.clueEl?.classList.toggle('selected',x===selected));paint()}
+    function paint(){for(const m of cells.values()){m.el.classList.remove('active','cross-active');if(selected?.cells.includes(key(m.r,m.c)))m.el.classList.add('active');else if(selected&&m.entries.some(e=>e.cells.some(k=>selected.cells.includes(k))))m.el.classList.add('cross-active')} }
+    function onInput(input,m){const val=input.value.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z]/g,'').slice(-1);input.value=val;if(checked){checked=false;clearFeedback()}updateScore();if(val)advance(m,1)}
+    function stepKey(k,delta){const i=selected.cells.indexOf(k);return selected.cells[Math.max(0,Math.min(selected.cells.length-1,i+delta))]}
+    function advance(m,d){const from=key(m.r,m.c),i=selected.cells.indexOf(from),next=selected.cells[i+d];if(next)cells.get(next).el.focus()}
+    function onKey(ev,m){const arrows={ArrowRight:['across',1],ArrowLeft:['across',-1],ArrowDown:['down',1],ArrowUp:['down',-1]};if(arrows[ev.key]){ev.preventDefault();const [dir,delta]=arrows[ev.key];if(selected.dir!==dir&&m.entries.some(e=>e.dir===dir))selectEntry(m.entries.find(e=>e.dir===dir),false);const next=stepKey(key(m.r,m.c),delta);if(next)cells.get(next).el.focus();return}if(ev.key==='Enter'){ev.preventDefault();const other=m.entries.find(e=>e!==selected);if(other)selectEntry(other,true);return}if(ev.key==='Backspace'&&!m.el.value){ev.preventDefault();advance(m,-1);return}if(ev.key===' '){ev.preventDefault();const other=m.entries.find(e=>e!==selected);if(other)selectEntry(other,true)}}
+    function clearFeedback(){for(const m of cells.values())m.el.classList.remove('correct','wrong');for(const e of entries)e.clueEl.classList.remove('done')}
+    function updateScore(){const solved=entries.filter(e=>e.cells.every(k=>cells.get(k).el.value===cells.get(k).answer));document.getElementById('score').textContent=solved.length;document.getElementById('progress').style.width=`${solved.length/entries.length*100}%`;document.getElementById('accuracy').textContent=`${Math.round(solved.length/entries.length*100)}%`;document.getElementById('status').textContent=solved.length===entries.length?'ONLINE':solved.length?'ATIVO':'EM CURSO';document.getElementById('status').classList.toggle('good',solved.length===entries.length);return solved}
+    function checkAnswers(){checked=true;const solved=updateScore();for(const e of entries)e.clueEl.classList.toggle('done',e.cells.every(k=>cells.get(k).el.value===cells.get(k).answer));for(const m of cells.values()){m.el.classList.remove('correct','wrong');m.el.classList.add(m.el.value===m.answer?'correct':'wrong')}const toast=document.getElementById('toast');if(solved.length===entries.length){toast.className='toast success';toast.textContent='Todas as 12 palavras estão corretas. Desafio completo!';if(!won){won=true;document.getElementById('victory').classList.add('open');document.getElementById('closeVictory').focus()}}else{toast.className=`toast ${solved.length?'success':'error'}`;toast.textContent=solved.length?`${solved.length} de 12 corretas. As casas em vermelho precisam de revisão.`:'Ainda há palavras para revisar. Confira as letras destacadas em vermelho.'}}
+    function reset(){for(const m of cells.values()){m.el.value='';m.el.classList.remove('correct','wrong')}entries.forEach(e=>e.clueEl.classList.remove('done'));checked=false;won=false;selected=entries[0];entries.forEach(e=>e.clueEl.classList.toggle('selected',e===selected));document.getElementById('toast').className='toast';document.getElementById('toast').textContent='Tabuleiro reiniciado. Selecione uma pista ou casa para começar.';document.getElementById('victory').classList.remove('open');updateScore();paint();cells.get(selected.cells[0]).el.focus()}
+    renderBoard();renderClues('across',acrossEl);renderClues('down',downEl);entries.forEach(e=>e.clueEl.classList.toggle('selected',e===selected));paint();document.getElementById('checkBtn').addEventListener('click',checkAnswers);document.getElementById('resetBtn').addEventListener('click',reset);document.getElementById('closeVictory').addEventListener('click',()=>document.getElementById('victory').classList.remove('open'));document.getElementById('victory').addEventListener('click',e=>{if(e.target.id==='victory')e.currentTarget.classList.remove('open')});document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('victory').classList.remove('open')});updateScore();
+  })();
+  </script>
 </html>
