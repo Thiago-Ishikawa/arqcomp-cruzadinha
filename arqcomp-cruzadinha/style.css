@@ -398,8 +398,8 @@ button {
 
 .board {
   display: grid;
-  grid-template-columns: repeat(26, var(--cell));
-  grid-template-rows: repeat(18, var(--cell));
+  grid-template-columns: repeat(var(--columns, 22), var(--cell));
+  grid-template-rows: repeat(var(--rows, 14), var(--cell));
   gap: 2px;
   width: max-content;
   margin: 0 auto;
@@ -818,3 +818,11 @@ button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Conquistas 8-bit */
+.achievements{padding:16px;border-top:1px solid #282d45;background:linear-gradient(110deg,#101629,#141127)}.achievement-heading>span{color:var(--cyan);font:700 9px monospace;letter-spacing:.18em}.achievement-heading h2{margin:6px 0 13px;color:#e6ddff;font:700 11px monospace;letter-spacing:.13em}.achievement-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.achievement{display:grid;grid-template-columns:42px 1fr;gap:9px;align-items:center;min-width:0;padding:10px;border:1px solid #343855;background:#0d1121;color:#77829e;transition:border-color .2s,background .2s,box-shadow .2s}.achievement-emblem{width:38px;height:38px;display:grid;place-items:center;clip-path:polygon(25% 0,75% 0,75% 12%,88% 12%,88% 25%,100% 25%,100% 75%,88% 75%,88% 88%,75% 88%,75% 100%,25% 100%,25% 88%,12% 88%,12% 75%,0 75%,0 25%,12% 25%,12% 12%,25% 12%);background:#24283d;color:#69738c;font:900 12px monospace}.achievement-copy{min-width:0}.achievement h3{margin:0;color:#8993ad;font:700 10px monospace;letter-spacing:.02em}.achievement p{margin:5px 0 0;font-size:10px;line-height:1.4;color:#75809c}.achievement>small{grid-column:2;color:#626d88;font:700 8px monospace;letter-spacing:.1em}.achievement.unlocked{border-color:#426c7c;background:linear-gradient(135deg,#12252d,#1b1730);box-shadow:inset 0 0 15px #00e5ff0d}.achievement.unlocked .achievement-emblem{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#08111d;text-shadow:0 1px #fff8;box-shadow:0 0 12px #00e5ff55}.achievement.unlocked h3{color:#eafaff}.achievement.unlocked p{color:#b9c9df}.achievement.unlocked>small{color:var(--mint)}.achievement-notice{position:fixed;right:22px;bottom:22px;z-index:20;display:flex;align-items:center;gap:13px;width:min(370px,calc(100vw - 28px));padding:15px;border:1px solid var(--cyan);background:linear-gradient(120deg,#122638,#211638);box-shadow:0 0 24px #00e5ff35,5px 5px 0 #56248a;opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .2s,transform .2s,visibility .2s}.achievement-notice.show{opacity:1;visibility:visible;transform:translateY(0)}.achievement-notice>b{display:grid;place-items:center;width:38px;height:38px;flex:none;background:var(--purple);color:white;clip-path:polygon(25% 0,75% 0,75% 12%,88% 12%,88% 25%,100% 25%,100% 75%,88% 75%,88% 88%,75% 88%,75% 100%,25% 100%,25% 88%,12% 88%,12% 75%,0 75%,0 25%,12% 25%,12% 12%,25% 12%);font:20px monospace}.achievement-notice div{display:grid;gap:4px}.achievement-notice small{color:var(--cyan);font:700 8px monospace;letter-spacing:.16em}.achievement-notice strong{color:#fff;font:700 13px monospace}.achievement-notice span{color:#b8c3dc;font-size:12px;line-height:1.35}
+@media(max-width:700px){.achievement-list{grid-template-columns:1fr}.achievement{grid-template-columns:42px 1fr auto}.achievement>small{grid-column:auto;text-align:right}.achievement-notice{right:14px;bottom:14px}}
+.achievement-emblem svg{display:block;width:27px;height:27px;shape-rendering:crispEdges;opacity:.48;filter:grayscale(.7)}.achievement.unlocked .achievement-emblem svg{opacity:1;filter:drop-shadow(0 0 4px #00e5ff80)}
+
+/* Botões e painéis de dicas */
+.clue-heading{justify-content:space-between;gap:8px}.heading-label{display:flex;align-items:center;gap:9px}.hint-button{display:inline-flex;align-items:center;gap:5px;flex:none;padding:5px 8px;border:1px solid #66532a;background:#28200f;color:#ffe36e;font:700 8px monospace;letter-spacing:.12em;cursor:pointer;box-shadow:0 0 8px #ffd84a25;transition:background .16s,box-shadow .16s,transform .16s}.hint-button svg{width:16px;height:16px;fill:#ffdf4f;filter:drop-shadow(0 0 4px #ffe45b);shape-rendering:crispEdges}.hint-button:hover:not(:disabled){background:#3a2e12;box-shadow:0 0 12px #ffe45b70;transform:translateY(-1px)}.hint-button:disabled{opacity:.35;cursor:not-allowed;filter:saturate(.45);box-shadow:none}.hint-display{margin:0 14px 8px;padding:9px 11px;border-left:2px solid #ffdf4f;background:#27200f;color:#f6e6a9;font-size:12px;line-height:1.5}.hint-display[hidden]{display:none}
