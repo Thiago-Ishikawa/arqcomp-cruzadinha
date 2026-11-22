@@ -655,15 +655,6 @@ button {
   position: relative;
 }
 
-.modal:before {
-  content: "âœ¦";
-  font-size: 31px;
-  color: #ffe887;
-  text-shadow: 0 0 22px #ffe887;
-  display: block;
-  margin-bottom: 12px;
-}
-
 .modal h2 {
   font: 700 18px monospace;
   color: #fff;
